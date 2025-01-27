@@ -23,7 +23,7 @@ export function DraggableItem({ item, containerId, onDelete }: Props) {
         isDragging ? "opacity-50" : ""
       }`}
     >
-      <div className="w-1.5 h-1.5 rounded-full bg-gray-500 dark:bg-gray-400 group-hover:bg-gray-500 transition-colors" />
+      <div className="w-1.5 h-1.5 me-2 rounded-full bg-gray-500 dark:bg-gray-400 group-hover:bg-gray-500 transition-colors" />
       <div className="flex-1 font-medium text-gray-600 dark:text-gray-300">
         {item.name}
       </div>
