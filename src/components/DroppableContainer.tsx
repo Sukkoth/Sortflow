@@ -44,8 +44,8 @@ export function DroppableContainer({
       ref={drop}
       className={`
         relative group h-fit min-w-[400px]
-        bg-indigo-800/30 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-indigo-700/50
-        ${isOver ? "border-blue-500" : ""}
+        bg-[#2E3944] backdrop-blur-sm rounded-xl p-4 shadow-lg border border-[#748D92]/30
+        ${isOver ? "border-[#D3D9D4]" : ""}
       `}
     >
       <div className="flex items-center justify-between mb-4">
@@ -64,12 +64,12 @@ export function DroppableContainer({
               type="text"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              className="flex-1 px-2 py-1 text-sm bg-indigo-900/50 border border-indigo-600/30 rounded-lg text-white"
+              className="flex-1 px-2 py-1 text-sm bg-[#212A31] border border-[#748D92]/30 rounded-lg text-[#D3D9D4]"
               autoFocus
             />
             <button
               type="submit"
-              className="px-2 py-1 text-xs text-white bg-blue-600 rounded-lg hover:bg-blue-500"
+              className="px-2 py-1 text-xs text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] hover:border-[#D3D9D4] rounded-lg transition-all duration-200"
             >
               Save
             </button>
@@ -79,7 +79,7 @@ export function DroppableContainer({
                 setIsEditing(false);
                 setNewName(title);
               }}
-              className="px-2 py-1 text-xs text-indigo-200 bg-indigo-800/50 rounded-lg hover:bg-indigo-700/50"
+              className="px-2 py-1 text-xs text-[#748D92] bg-[#212A31] hover:bg-[#2E3944] border border-[#748D92]/30 hover:border-[#748D92] rounded-lg transition-all duration-200"
             >
               Cancel
             </button>
@@ -89,7 +89,7 @@ export function DroppableContainer({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="p-1 text-indigo-300 hover:text-white rounded-lg hover:bg-indigo-700/50"
+                className="p-1 text-[#748D92] hover:text-[#D3D9D4] rounded-lg hover:bg-[#124E66] transition-all duration-200"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -106,9 +106,9 @@ export function DroppableContainer({
                   />
                 </svg>
               </button>
-              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[#D3D9D4] flex items-center gap-2">
                 {title}
-                <span className="text-sm font-normal text-indigo-400">
+                <span className="text-sm font-normal text-[#748D92]">
                   ({items.length})
                 </span>
               </h3>
@@ -117,7 +117,7 @@ export function DroppableContainer({
               <div className="relative">
                 <button
                   onClick={() => setShowOptions(!showOptions)}
-                  className="p-1 text-indigo-300 hover:text-white rounded-lg hover:bg-indigo-700/50"
+                  className="p-1 text-[#748D92] hover:text-[#D3D9D4] rounded-lg hover:bg-[#124E66] transition-all duration-200"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -129,10 +129,10 @@ export function DroppableContainer({
                   </svg>
                 </button>
                 {showOptions && (
-                  <div className="absolute right-0 mt-1 w-48 rounded-lg bg-indigo-900/95 border border-indigo-700/50 shadow-lg py-1 z-10">
+                  <div className="absolute right-0 mt-1 w-48 rounded-lg bg-[#212A31] border border-[#748D92]/30 shadow-lg py-1 z-10">
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="w-full px-4 py-2 text-sm text-left text-indigo-200 hover:bg-indigo-800/50 hover:text-white"
+                      className="w-full px-4 py-2 text-sm text-left text-[#748D92] hover:bg-[#2E3944] hover:text-[#D3D9D4] transition-all duration-200"
                     >
                       Rename Category
                     </button>
@@ -146,7 +146,7 @@ export function DroppableContainer({
                           onDeleteCategory?.();
                         }
                       }}
-                      className="w-full px-4 py-2 text-sm text-left text-indigo-200 hover:bg-indigo-800/50 hover:text-white"
+                      className="w-full px-4 py-2 text-sm text-left text-[#748D92] hover:bg-[#2E3944] hover:text-[#D3D9D4] transition-all duration-200"
                     >
                       Delete Category & Move Items
                     </button>

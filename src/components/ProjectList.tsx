@@ -23,23 +23,23 @@ export function ProjectList({ projects, onSelect, onCreate, onDelete }: Props) {
     <div className="min-h-screen p-8">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-white">My Projects</h1>
+          <h1 className="text-3xl font-bold text-[#D3D9D4]">My Projects</h1>
           <button
             onClick={() => setIsCreating(true)}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all hover:scale-105"
+            className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] hover:border-[#D3D9D4] rounded-lg transition-all duration-200"
           >
             New Project
           </button>
         </div>
 
         {isCreating && (
-          <div className="bg-indigo-800/30 backdrop-blur-sm rounded-xl p-6 border border-indigo-700/50 mb-6 animate-fade-in">
-            <h2 className="text-xl font-semibold text-white mb-4">
+          <div className="bg-[#2E3944] backdrop-blur-sm rounded-xl p-6 border border-[#748D92]/30 mb-6 animate-fade-in">
+            <h2 className="text-xl font-semibold text-[#D3D9D4] mb-4">
               Create New Project
             </h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-indigo-200 mb-1">
+                <label className="block text-sm font-medium text-[#748D92] mb-1">
                   Project Name
                 </label>
                 <input
@@ -48,12 +48,12 @@ export function ProjectList({ projects, onSelect, onCreate, onDelete }: Props) {
                   onChange={(e) =>
                     setNewProject((prev) => ({ ...prev, name: e.target.value }))
                   }
-                  className="w-full px-4 py-2 bg-indigo-900/50 border border-indigo-600/30 rounded-lg text-white placeholder-indigo-300/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                  className="w-full px-4 py-2 bg-[#212A31] border border-[#748D92]/30 rounded-lg text-[#D3D9D4] placeholder-[#748D92]/50 focus:outline-none focus:border-[#748D92] transition-all duration-200"
                   placeholder="Enter project name..."
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-indigo-200 mb-1">
+                <label className="block text-sm font-medium text-[#748D92] mb-1">
                   Description
                 </label>
                 <textarea
@@ -64,20 +64,20 @@ export function ProjectList({ projects, onSelect, onCreate, onDelete }: Props) {
                       description: e.target.value,
                     }))
                   }
-                  className="w-full px-4 py-2 bg-indigo-900/50 border border-indigo-600/30 rounded-lg text-white placeholder-indigo-300/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 h-24 resize-none"
+                  className="w-full px-4 py-2 bg-[#212A31] border border-[#748D92]/30 rounded-lg text-[#D3D9D4] placeholder-[#748D92]/50 focus:outline-none focus:border-[#748D92] transition-all duration-200 h-24 resize-none"
                   placeholder="Enter project description..."
                 />
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={handleCreate}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                  className="flex-1 px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] hover:border-[#D3D9D4] rounded-lg transition-all duration-200"
                 >
                   Create Project
                 </button>
                 <button
                   onClick={() => setIsCreating(false)}
-                  className="px-4 py-2 text-sm font-medium text-indigo-200 bg-indigo-950/50 hover:bg-indigo-900/50 rounded-lg transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-[#748D92] bg-[#212A31] hover:bg-[#2E3944] border border-[#748D92]/30 hover:border-[#748D92] rounded-lg transition-all duration-200"
                 >
                   Cancel
                 </button>
@@ -90,19 +90,19 @@ export function ProjectList({ projects, onSelect, onCreate, onDelete }: Props) {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="group bg-indigo-800/30 backdrop-blur-sm p-6 rounded-xl border border-indigo-700/50 hover:border-indigo-600 hover:bg-indigo-800/40 transition-all text-left relative"
+              className="group bg-[#2E3944] backdrop-blur-sm p-6 rounded-xl border border-[#748D92]/30 hover:border-[#D3D9D4] hover:bg-[#124E66] transition-all duration-200 text-left relative"
             >
               <button
                 onClick={() => onSelect(project)}
                 className="w-full text-left"
               >
-                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400">
+                <h3 className="text-lg font-semibold text-[#D3D9D4] mb-2 group-hover:text-[#D3D9D4]">
                   {project.name}
                 </h3>
-                <p className="text-sm text-indigo-200/70 mb-4 line-clamp-2">
+                <p className="text-[#748D92] text-sm group-hover:text-[#D3D9D4]/90">
                   {project.description}
                 </p>
-                <div className="flex items-center justify-between text-xs text-indigo-300/60">
+                <div className="flex items-center justify-between text-xs text-[#748D92]">
                   <span>
                     Created {new Date(project.createdAt).toLocaleDateString()}
                   </span>
@@ -116,13 +116,9 @@ export function ProjectList({ projects, onSelect, onCreate, onDelete }: Props) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (
-                    confirm("Are you sure you want to delete this project?")
-                  ) {
-                    onDelete(project.id);
-                  }
+                  onDelete(project.id);
                 }}
-                className="absolute top-4 right-4 p-2 text-indigo-300/60 hover:text-red-400 rounded-full hover:bg-red-900/30 transition-colors"
+                className="absolute top-4 right-4 p-2 text-[#748D92] hover:text-[#D3D9D4] opacity-0 group-hover:opacity-100 transition-all duration-200 rounded-lg hover:bg-[#212A31]/50"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -21,16 +21,16 @@ export function DraggableItem({ item, containerId, onDelete }: Props) {
       ref={drag}
       className={`
         group relative flex items-center gap-2 p-3 
-        bg-indigo-700/30 border border-indigo-600/50 rounded-lg 
-        hover:bg-indigo-600/30 hover:border-indigo-500/50
+        bg-[#2E3944] border border-[#748D92]/30 rounded-lg 
+        hover:bg-[#124E66] hover:border-[#D3D9D4]
         shadow-sm hover:shadow-md hover:scale-[1.02]
         transition-all duration-200 ease-in-out 
         cursor-move w-[97%] mx-auto text-sm
         ${isDragging ? "opacity-50 scale-95 rotate-2" : ""}
       `}
     >
-      <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 group-hover:bg-indigo-300 transition-colors" />
-      <div className="flex-1 font-medium text-white">{item.name}</div>
+      <div className="w-1.5 h-1.5 rounded-full bg-[#748D92] group-hover:bg-[#D3D9D4] transition-colors" />
+      <div className="flex-1 font-medium text-[#D3D9D4]">{item.name}</div>
       <button
         onClick={onDelete}
         className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-500/20 rounded"

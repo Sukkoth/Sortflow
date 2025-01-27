@@ -329,7 +329,7 @@ function App() {
 
   if (!currentProject) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-800">
+      <div className="min-h-screen bg-[#212A31]">
         <div className="p-8">
           <ProjectList
             projects={state.projects || []}
@@ -344,15 +344,15 @@ function App() {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-800">
+      <div className="min-h-screen bg-[#212A31]">
         <div className="p-8">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-white">
+              <h1 className="text-3xl font-bold text-[#D3D9D4]">
                 {currentProject.name}
               </h1>
-              <p className="text-indigo-200 text-sm mt-1">
+              <p className="text-[#748D92] text-sm mt-1">
                 {currentProject.description}
               </p>
             </div>
@@ -367,7 +367,7 @@ function App() {
                     clearProject(false);
                   }
                 }}
-                className="px-4 py-2 text-sm font-medium text-indigo-200 hover:text-white bg-indigo-800/50 hover:bg-indigo-700/50 rounded-lg transition-colors border border-indigo-700"
+                className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] rounded-lg transition-all duration-200"
               >
                 Clear Categories
               </button>
@@ -381,7 +381,7 @@ function App() {
                     clearProject(true);
                   }
                 }}
-                className="px-4 py-2 text-sm font-medium text-red-400 hover:text-red-300 bg-red-900/30 hover:bg-red-800/30 rounded-lg transition-colors border border-red-800/50"
+                className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] rounded-lg transition-all duration-200"
               >
                 Clear Everything
               </button>
@@ -389,13 +389,13 @@ function App() {
                 onClick={() =>
                   setState((prev) => ({ ...prev, currentProjectId: null }))
                 }
-                className="px-4 py-2 text-sm font-medium text-indigo-200 hover:text-white bg-indigo-800/50 hover:bg-indigo-700/50 rounded-lg transition-colors border border-indigo-700"
+                className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] rounded-lg transition-all duration-200"
               >
                 Back to Projects
               </button>
               <button
                 onClick={handleSave}
-                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg transition-colors"
+                className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] rounded-lg transition-all duration-200"
               >
                 Save Changes
               </button>
@@ -420,8 +420,8 @@ function App() {
             {/* Left Sidebar */}
             <div className="space-y-6">
               {/* Add Category */}
-              <div className="bg-indigo-800/30 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-indigo-700/50">
-                <h2 className="text-lg font-semibold text-white mb-4">
+              <div className="bg-[#2E3944] backdrop-blur-sm rounded-xl p-4 shadow-lg border border-[#748D92]/30">
+                <h2 className="text-lg font-semibold text-[#D3D9D4] mb-4">
                   Add Category
                 </h2>
                 <div className="flex gap-2">
@@ -439,7 +439,7 @@ function App() {
                       }
                     }}
                     placeholder="Category name..."
-                    className="flex-1 px-3 py-2 text-sm bg-indigo-700/30 border border-indigo-600/50 rounded-lg text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500"
+                    className="flex-1 px-3 py-2 text-sm bg-[#212A31] border border-[#748D92]/30 rounded-lg text-[#D3D9D4] placeholder-[#748D92]/70 focus:outline-none focus:border-[#748D92] transition-all duration-200"
                   />
                   <button
                     onClick={() => {
@@ -449,7 +449,7 @@ function App() {
                         setNewCategoryName("");
                       }
                     }}
-                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg transition-colors"
+                    className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] hover:border-[#D3D9D4] rounded-lg transition-all duration-200"
                   >
                     Add
                   </button>
@@ -457,8 +457,8 @@ function App() {
               </div>
 
               {/* Add Items */}
-              <div className="bg-indigo-800/30 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-indigo-700/50">
-                <h2 className="text-lg font-semibold text-white mb-4">
+              <div className="bg-[#2E3944] backdrop-blur-sm rounded-xl p-4 shadow-lg border border-[#748D92]/30">
+                <h2 className="text-lg font-semibold text-[#D3D9D4] mb-4">
                   Add Items
                 </h2>
                 <form
@@ -475,11 +475,11 @@ function App() {
                   <textarea
                     name="items"
                     placeholder="* Item 1 * Item 2 * Item 3"
-                    className="w-full h-24 px-3 py-2 text-sm bg-indigo-700/30 border border-indigo-600/50 rounded-lg text-white placeholder-indigo-300 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 font-mono mb-2"
+                    className="w-full h-24 px-3 py-2 text-sm bg-[#212A31] border border-[#748D92]/30 rounded-lg text-[#D3D9D4] placeholder-[#748D92]/70 resize-none focus:outline-none focus:border-[#748D92] font-mono mb-2"
                   />
                   <button
                     type="submit"
-                    className="w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg transition-colors"
+                    className="w-full px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] hover:border-[#D3D9D4] rounded-lg transition-all duration-200"
                   >
                     Add Items
                   </button>
