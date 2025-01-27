@@ -1,5 +1,6 @@
 import { useDrag } from "react-dnd";
 import { Item } from "../types";
+import { useTheme } from "../context/ThemeContext";
 
 interface Props {
   item: Item;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export function DraggableItem({ item, containerId, onDelete }: Props) {
+  const { theme } = useTheme();
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
     item: { id: item.id, containerId },
@@ -19,27 +21,37 @@ export function DraggableItem({ item, containerId, onDelete }: Props) {
   return (
     <div
       ref={drag}
-      className={`
-        group relative flex items-center gap-2 p-3 
-        bg-[#2E3944] border border-[#748D92]/30 rounded-lg 
-        hover:bg-[#124E66] hover:border-[#D3D9D4]
+      className={`group relative flex items-center gap-2 p-3 rounded-lg 
+        ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'} 
+        ${isDragging ? "opacity-50 scale-95 rotate-2" : ""}
         shadow-sm hover:shadow-md hover:scale-[1.02]
         transition-all duration-200 ease-in-out 
         cursor-move w-[97%] mx-auto text-sm
-        ${isDragging ? "opacity-50 scale-95 rotate-2" : ""}
       `}
     >
-      <div className="w-1.5 h-1.5 rounded-full bg-[#748D92] group-hover:bg-[#D3D9D4] transition-colors" />
-      <div className="flex-1 font-medium text-[#D3D9D4]">{item.name}</div>
+      <div className={`w-1.5 h-1.5 rounded-full 
+        ${theme === 'dark' ? 'bg-gray-400' : 'bg-gray-500'}
+        group-hover:bg-gray-500 transition-colors
+      `} />
+      <div className={`flex-1 font-medium 
+        ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}
+      `}>{item.name}</div>
       <button
         onClick={onDelete}
-        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-500/20 rounded"
+        className={`opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded 
+          ${theme === 'dark'
+            ? 'hover:bg-red-500/20 text-red-400 hover:text-red-300'
+            : 'hover:bg-red-500/20 text-red-600 hover:text-red-500'
+          }
+        `}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className="w-4 h-4 text-red-400 hover:text-red-300"
+          className={`w-4 h-4 
+            ${theme === 'dark' ? 'text-red-400 hover:text-red-300' : 'text-red-600 hover:text-red-500'}
+          `}
         >
           <path
             fillRule="evenodd"

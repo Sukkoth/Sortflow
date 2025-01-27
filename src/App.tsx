@@ -6,8 +6,10 @@ import { Item, Project } from "./types";
 import { DroppableContainer } from "./components/DroppableContainer";
 import { ProjectList } from "./components/ProjectList";
 import { appStateAtom } from "./store/atoms";
+import { ThemeProvider, useTheme } from "./context/ThemeContext";
 
-function App() {
+function AppContent() {
+  const { theme, toggleTheme } = useTheme();
   const [state, setState] = useAtom(appStateAtom);
 
   const [saveStatus, setSaveStatus] = useState<{
@@ -312,7 +314,7 @@ function App() {
 
   if (!currentProject) {
     return (
-      <div className="min-h-screen bg-[#212A31]">
+      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
         <div className="p-8">
           <ProjectList
             projects={state.projects || []}
@@ -326,182 +328,196 @@ function App() {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="min-h-screen bg-[#212A31]">
-        <div className="p-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-[#D3D9D4]">
-                {currentProject.name}
-              </h1>
-              <p className="text-[#748D92] text-sm mt-1">
-                {currentProject.description}
-              </p>
-            </div>
-            <div className="flex gap-4">
-              <button
-                onClick={() => {
-                  if (
-                    window.confirm(
-                      "Clear all categories and move items to general list?"
-                    )
-                  ) {
-                    clearProject(false);
-                  }
-                }}
-                className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] rounded-lg transition-all duration-200"
-              >
-                Clear Categories
-              </button>
-              <button
-                onClick={() => {
-                  if (
-                    window.confirm(
-                      "Clear all categories and items? This cannot be undone."
-                    )
-                  ) {
-                    clearProject(true);
-                  }
-                }}
-                className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] rounded-lg transition-all duration-200"
-              >
-                Clear Everything
-              </button>
-              <button
-                onClick={() =>
-                  setState((prev) => ({ ...prev, currentProjectId: null }))
-                }
-                className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] rounded-lg transition-all duration-200"
-              >
-                Back to Projects
-              </button>
-              <button
-                onClick={handleSave}
-                className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] rounded-lg transition-all duration-200"
-              >
-                Save Changes
-              </button>
-            </div>
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
+      <div className="p-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-[#D3D9D4]">
+              {currentProject.name}
+            </h1>
+            <p className="text-[#748D92] text-sm mt-1">
+              {currentProject.description}
+            </p>
           </div>
-
-          {/* Save Status Toast */}
-          {saveStatus && (
-            <div
-              className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transition-all transform ${
-                saveStatus.type === "success"
-                  ? "bg-green-600 text-white"
-                  : "bg-red-600 text-white"
-              }`}
+          <div className="flex gap-4">
+            <button
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Clear all categories and move items to general list?"
+                  )
+                ) {
+                  clearProject(false);
+                }
+              }}
+              className="px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white border border-gray-200 dark:border-gray-600 transition-all duration-200"
             >
-              {saveStatus.message}
-            </div>
-          )}
+              Clear Categories
+            </button>
+            <button
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Clear all categories and items? This cannot be undone."
+                  )
+                ) {
+                  clearProject(true);
+                }
+              }}
+              className="px-4 py-2 text-sm font-medium rounded-lg bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white transition-all duration-200"
+            >
+              Clear Everything
+            </button>
+            <button
+              onClick={() =>
+                setState((prev) => ({ ...prev, currentProjectId: null }))
+              }
+              className="px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white border border-gray-200 dark:border-gray-600 transition-all duration-200"
+            >
+              Back to Projects
+            </button>
+            <button
+              onClick={handleSave}
+              className="px-4 py-2 text-sm font-medium rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-all duration-200"
+            >
+              Save Changes
+            </button>
+            <button
+              onClick={toggleTheme}
+              className="px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white border border-gray-200 dark:border-gray-600 transition-all duration-200"
+            >
+              {theme === 'dark' ? '🌞 Light' : '🌙 Dark'}
+            </button>
+          </div>
+        </div>
 
-          {/* Main Content */}
-          <div className="grid grid-cols-[400px_1fr] gap-8">
-            {/* Left Sidebar */}
-            <div className="space-y-6">
-              {/* Add Category */}
-              <div className="bg-[#2E3944] backdrop-blur-sm rounded-xl p-4 shadow-lg border border-[#748D92]/30">
-                <h2 className="text-lg font-semibold text-[#D3D9D4] mb-4">
-                  Add Category
-                </h2>
-                <div className="flex gap-2">
-                  <input
-                    value={newCategoryName}
-                    onChange={(e) => setNewCategoryName(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        const name = newCategoryName.trim();
-                        if (name) {
-                          addCategory(name);
-                          setNewCategoryName("");
-                        }
-                      }
-                    }}
-                    placeholder="Category name..."
-                    className="flex-1 px-3 py-2 text-sm bg-[#212A31] border border-[#748D92]/30 rounded-lg text-[#D3D9D4] placeholder-[#748D92]/70 focus:outline-none focus:border-[#748D92] transition-all duration-200"
-                  />
-                  <button
-                    onClick={() => {
+        {/* Save Status Toast */}
+        {saveStatus && (
+          <div
+            className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transition-all transform ${
+              saveStatus.type === "success"
+                ? "bg-green-600 text-white"
+                : "bg-red-600 text-white"
+            }`}
+          >
+            {saveStatus.message}
+          </div>
+        )}
+
+        {/* Main Content */}
+        <div className="grid grid-cols-[400px_1fr] gap-8">
+          {/* Left Sidebar */}
+          <div className="space-y-6">
+            {/* Add Category */}
+            <div className="backdrop-blur-sm rounded-xl p-4 shadow-lg border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                Add Category
+              </h2>
+              <div className="flex gap-2">
+                <input
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
                       const name = newCategoryName.trim();
                       if (name) {
                         addCategory(name);
                         setNewCategoryName("");
                       }
-                    }}
-                    className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] hover:border-[#D3D9D4] rounded-lg transition-all duration-200"
-                  >
-                    Add
-                  </button>
-                </div>
-              </div>
-
-              {/* Add Items */}
-              <div className="bg-[#2E3944] backdrop-blur-sm rounded-xl p-4 shadow-lg border border-[#748D92]/30">
-                <h2 className="text-lg font-semibold text-[#D3D9D4] mb-4">
-                  Add Items
-                </h2>
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    const form = e.target as HTMLFormElement;
-                    const textarea = form.elements.namedItem(
-                      "items"
-                    ) as HTMLTextAreaElement;
-                    addBulkItems(textarea.value);
-                    textarea.value = "";
+                    }
                   }}
+                  placeholder="Category name..."
+                  className="flex-1 px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <button
+                  onClick={() => {
+                    const name = newCategoryName.trim();
+                    if (name) {
+                      addCategory(name);
+                      setNewCategoryName("");
+                    }
+                  }}
+                  className="px-4 py-2 text-sm font-medium rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-all duration-200"
                 >
-                  <textarea
-                    name="items"
-                    placeholder="* Item 1 * Item 2 * Item 3"
-                    className="w-full h-24 px-3 py-2 text-sm bg-[#212A31] border border-[#748D92]/30 rounded-lg text-[#D3D9D4] placeholder-[#748D92]/70 resize-none focus:outline-none focus:border-[#748D92] font-mono mb-2"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] hover:border-[#D3D9D4] rounded-lg transition-all duration-200"
-                  >
-                    Add Items
-                  </button>
-                </form>
+                  Add
+                </button>
               </div>
-
-              {/* General Items */}
-              <DroppableContainer
-                id={null}
-                title="General Items"
-                items={currentProject.items}
-                onMove={moveItem}
-                onDelete={deleteItem}
-              />
             </div>
 
-            {/* Categories Grid */}
-            <div className="overflow-x-auto scrollbar-hide">
-              <div className="flex gap-4 pb-4 min-w-max">
-                {currentProject.categories.map((category) => (
-                  <DroppableContainer
-                    key={category.id}
-                    id={category.id}
-                    title={category.name}
-                    items={category.items}
-                    onMove={moveItem}
-                    onDelete={deleteItem}
-                    onDeleteCategory={deleteCategory}
-                    onRenameCategory={(newName) =>
-                      renameCategory(category.id, newName)
-                    }
-                  />
-                ))}
-              </div>
+            {/* Add Items */}
+            <div className="backdrop-blur-sm rounded-xl p-4 shadow-lg border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                Add Items
+              </h2>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const form = e.target as HTMLFormElement;
+                  const textarea = form.elements.namedItem(
+                    "items"
+                  ) as HTMLTextAreaElement;
+                  addBulkItems(textarea.value);
+                  textarea.value = "";
+                }}
+              >
+                <textarea
+                  name="items"
+                  placeholder="* Item 1&#10;* Item 2&#10;* Item 3"
+                  className="w-full h-24 px-3 py-2 text-sm rounded-lg border mb-2 resize-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <button
+                  type="submit"
+                  className="w-full px-4 py-2 text-sm font-medium rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-all duration-200"
+                >
+                  Add Items
+                </button>
+              </form>
+            </div>
+
+            {/* General Items */}
+            <DroppableContainer
+              id={null}
+              title="General Items"
+              items={currentProject.items}
+              onMove={moveItem}
+              onDelete={deleteItem}
+            />
+          </div>
+
+          {/* Categories Grid */}
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex gap-4 pb-4 min-w-max">
+              {currentProject.categories.map((category) => (
+                <DroppableContainer
+                  key={category.id}
+                  id={category.id}
+                  title={category.name}
+                  items={category.items}
+                  onMove={moveItem}
+                  onDelete={deleteItem}
+                  onDeleteCategory={deleteCategory}
+                  onRenameCategory={(newName) =>
+                    renameCategory(category.id, newName)
+                  }
+                />
+              ))}
             </div>
           </div>
         </div>
       </div>
-    </DndProvider>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <DndProvider backend={HTML5Backend}>
+        <AppContent />
+      </DndProvider>
+    </ThemeProvider>
   );
 }
 
