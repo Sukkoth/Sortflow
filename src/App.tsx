@@ -1,33 +1,14 @@
 import { useState, useEffect } from "react";
+import { useAtom } from "jotai";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Item, AppState, Project } from "./types";
+import { Item, Project } from "./types";
 import { DroppableContainer } from "./components/DroppableContainer";
 import { ProjectList } from "./components/ProjectList";
-
-const initialState: AppState = {
-  projects: [],
-  currentProjectId: null,
-};
+import { appStateAtom } from "./store/atoms";
 
 function App() {
-  const [state, setState] = useState<AppState>(() => {
-    const savedState = localStorage.getItem("sortflowState");
-    if (savedState) {
-      try {
-        const parsed = JSON.parse(savedState);
-        if (parsed && typeof parsed === "object") {
-          return {
-            projects: Array.isArray(parsed.projects) ? parsed.projects : [],
-            currentProjectId: parsed.currentProjectId || null,
-          };
-        }
-      } catch (e) {
-        console.error("Failed to parse saved state:", e);
-      }
-    }
-    return initialState;
-  });
+  const [state, setState] = useAtom(appStateAtom);
 
   const [saveStatus, setSaveStatus] = useState<{
     show: boolean;
