@@ -74,9 +74,11 @@ function App() {
         const category = project.categories.find((c) => c.id === categoryId);
         if (category) {
           if (moveItemsToGeneral) {
-            // Move items to general items
-            project.items.push(...category.items);
+            // Option: Delete without items
+            // Move items back to general list first
+            project.items = [...project.items, ...category.items];
           }
+          // Just remove the category (and its items) in both cases
           project.categories = project.categories.filter(
             (c) => c.id !== categoryId
           );
@@ -488,7 +490,7 @@ function App() {
                     items={category.items}
                     onMove={moveItem}
                     onDelete={deleteItem}
-                    onDeleteCategory={() => deleteCategory(category.id)}
+                    onDeleteCategory={deleteCategory}
                     onRenameCategory={(newName) =>
                       renameCategory(category.id, newName)
                     }

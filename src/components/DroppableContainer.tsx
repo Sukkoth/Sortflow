@@ -1,7 +1,7 @@
 import { useDrop } from "react-dnd";
 import { Item } from "../types";
 import { DraggableItem } from "./DraggableItem";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface Props {
   id: string | null;
@@ -9,7 +9,7 @@ interface Props {
   items: Item[];
   onMove: (itemId: string, fromId: string | null, toId: string | null) => void;
   onDelete: (itemId: string, categoryId: string | null) => void;
-  onDeleteCategory?: () => void;
+  onDeleteCategory?: (categoryId: string, deleteItems: boolean) => void;
   onRenameCategory?: (newName: string) => void;
 }
 
@@ -34,10 +34,36 @@ export function DroppableContainer({
     }),
   }));
 
+  const optionsRef = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState(title);
   const [showOptions, setShowOptions] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        optionsRef.current &&
+        !optionsRef.current.contains(event.target as Node)
+      ) {
+        setShowOptions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleRename = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onRenameCategory && newName.trim()) {
+      onRenameCategory(newName);
+      setIsEditing(false);
+      setShowOptions(false);
+    }
+  };
 
   return (
     <div
@@ -50,16 +76,7 @@ export function DroppableContainer({
     >
       <div className="flex items-center justify-between mb-4">
         {isEditing ? (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (onRenameCategory) {
-                onRenameCategory(newName);
-                setIsEditing(false);
-              }
-            }}
-            className="flex-1 flex gap-2"
-          >
+          <form onSubmit={handleRename} className="flex-1 flex gap-2">
             <input
               type="text"
               value={newName}
@@ -114,7 +131,7 @@ export function DroppableContainer({
               </h3>
             </div>
             {id !== null && (
-              <div className="relative">
+              <div className="relative" ref={optionsRef}>
                 <button
                   onClick={() => setShowOptions(!showOptions)}
                   className="p-1 text-[#748D92] hover:text-[#D3D9D4] rounded-lg hover:bg-[#124E66] transition-all duration-200"
@@ -131,7 +148,10 @@ export function DroppableContainer({
                 {showOptions && (
                   <div className="absolute right-0 mt-1 w-48 rounded-lg bg-[#212A31] border border-[#748D92]/30 shadow-lg py-1 z-10">
                     <button
-                      onClick={() => setIsEditing(true)}
+                      onClick={() => {
+                        setIsEditing(true);
+                        setShowOptions(false);
+                      }}
                       className="w-full px-4 py-2 text-sm text-left text-[#748D92] hover:bg-[#2E3944] hover:text-[#D3D9D4] transition-all duration-200"
                     >
                       Rename Category
@@ -140,27 +160,31 @@ export function DroppableContainer({
                       onClick={() => {
                         if (
                           window.confirm(
-                            "Move items to general list and delete category?"
+                            "Are you sure you want to delete this category? Items will be moved to general items."
                           )
                         ) {
-                          onDeleteCategory?.();
+                          onDeleteCategory?.(id, true); // true = move to general items
+                          setShowOptions(false);
                         }
                       }}
                       className="w-full px-4 py-2 text-sm text-left text-[#748D92] hover:bg-[#2E3944] hover:text-[#D3D9D4] transition-all duration-200"
                     >
-                      Delete Category & Move Items
+                      Delete without Items
                     </button>
                     <button
                       onClick={() => {
                         if (
-                          window.confirm("Delete category and all its items?")
+                          window.confirm(
+                            "Are you sure you want to delete this category and all its items permanently? This action cannot be undone."
+                          )
                         ) {
-                          onDeleteCategory?.();
+                          onDeleteCategory?.(id, false); // false = don't move to general items (delete everything)
+                          setShowOptions(false);
                         }
                       }}
                       className="w-full px-4 py-2 text-sm text-left text-red-400 hover:bg-red-900/30 hover:text-red-300"
                     >
-                      Delete Category & Items
+                      Delete with Items
                     </button>
                   </div>
                 )}
