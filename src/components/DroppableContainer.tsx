@@ -43,7 +43,7 @@ export function DroppableContainer({
     <div
       ref={drop}
       className={`
-        relative group h-fit
+        relative group h-fit min-w-[400px]
         bg-indigo-800/30 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-indigo-700/50
         ${isOver ? "border-blue-500" : ""}
       `}

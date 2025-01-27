@@ -497,21 +497,23 @@ function App() {
             </div>
 
             {/* Categories Grid */}
-            <div className="grid grid-cols-2 gap-4 content-start">
-              {currentProject.categories.map((category) => (
-                <DroppableContainer
-                  key={category.id}
-                  id={category.id}
-                  title={category.name}
-                  items={category.items}
-                  onMove={moveItem}
-                  onDelete={deleteItem}
-                  onDeleteCategory={() => deleteCategory(category.id)}
-                  onRenameCategory={(newName) =>
-                    renameCategory(category.id, newName)
-                  }
-                />
-              ))}
+            <div className="overflow-x-auto scrollbar-hide">
+              <div className="flex gap-4 pb-4 min-w-max">
+                {currentProject.categories.map((category) => (
+                  <DroppableContainer
+                    key={category.id}
+                    id={category.id}
+                    title={category.name}
+                    items={category.items}
+                    onMove={moveItem}
+                    onDelete={deleteItem}
+                    onDeleteCategory={() => deleteCategory(category.id)}
+                    onRenameCategory={(newName) =>
+                      renameCategory(category.id, newName)
+                    }
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
