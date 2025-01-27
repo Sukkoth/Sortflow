@@ -25,7 +25,7 @@ export function DraggableItem({ item, containerId, onDelete }: Props) {
         hover:bg-indigo-600/30 hover:border-indigo-500/50
         shadow-sm hover:shadow-md hover:scale-[1.02]
         transition-all duration-200 ease-in-out 
-        cursor-move w-[97%] mx-auto
+        cursor-move w-[97%] mx-auto text-sm
         ${isDragging ? "opacity-50 scale-95 rotate-2" : ""}
       `}
     >
