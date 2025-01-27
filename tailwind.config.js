@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -23,6 +24,10 @@ export default {
           green: "#10B981", // Success
           yellow: "#F59E0B", // Warning
           purple: "#8B5CF6", // Special actions
+          light: "#FFE4E4", // Light accent
+          DEFAULT: "#FF6B6B", // Main accent
+          dark: "#FF4F4F", // Dark accent
+          hover: "#FF8787", // Hover state
         },
         danger: {
           light: "#FEE2E2", // Light red background

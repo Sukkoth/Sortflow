@@ -1,33 +1,16 @@
 import { useState, useEffect } from "react";
+import { useAtom } from "jotai";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Item, AppState, Project } from "./types";
+import { Item, Project } from "./types";
 import { DroppableContainer } from "./components/DroppableContainer";
 import { ProjectList } from "./components/ProjectList";
+import { appStateAtom } from "./store/atoms";
+import { ThemeProvider, useTheme } from "./context/ThemeContext";
 
-const initialState: AppState = {
-  projects: [],
-  currentProjectId: null,
-};
-
-function App() {
-  const [state, setState] = useState<AppState>(() => {
-    const savedState = localStorage.getItem("sortflowState");
-    if (savedState) {
-      try {
-        const parsed = JSON.parse(savedState);
-        if (parsed && typeof parsed === "object") {
-          return {
-            projects: Array.isArray(parsed.projects) ? parsed.projects : [],
-            currentProjectId: parsed.currentProjectId || null,
-          };
-        }
-      } catch (e) {
-        console.error("Failed to parse saved state:", e);
-      }
-    }
-    return initialState;
-  });
+function AppContent() {
+  const { theme, toggleTheme } = useTheme();
+  const [state, setState] = useAtom(appStateAtom);
 
   const [saveStatus, setSaveStatus] = useState<{
     show: boolean;
@@ -93,9 +76,11 @@ function App() {
         const category = project.categories.find((c) => c.id === categoryId);
         if (category) {
           if (moveItemsToGeneral) {
-            // Move items to general items
-            project.items.push(...category.items);
+            // Option: Delete without items
+            // Move items back to general list first
+            project.items = [...project.items, ...category.items];
           }
+          // Just remove the category (and its items) in both cases
           project.categories = project.categories.filter(
             (c) => c.id !== categoryId
           );
@@ -329,7 +314,7 @@ function App() {
 
   if (!currentProject) {
     return (
-      <div className="min-h-screen bg-[#212A31]">
+      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
         <div className="p-8">
           <ProjectList
             projects={state.projects || []}
@@ -343,182 +328,229 @@ function App() {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="min-h-screen bg-[#212A31]">
-        <div className="p-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-[#D3D9D4]">
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
+      <div className="p-8">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-6">
+          <div className="flex-1">
+            <div className="flex items-center gap-3">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-500 to-violet-500 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
                 {currentProject.name}
               </h1>
-              <p className="text-[#748D92] text-sm mt-1">
-                {currentProject.description}
-              </p>
+              <div className="px-3 py-1 text-xs font-medium rounded-full bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-300">
+                {currentProject.categories.length} Categories
+              </div>
             </div>
-            <div className="flex gap-4">
+            <p className="text-gray-600 dark:text-gray-400 text-sm mt-2 max-w-2xl">
+              {currentProject.description}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-3 items-center">
+            <div className="flex items-center gap-2">
               <button
-                onClick={() => {
-                  if (
-                    window.confirm(
-                      "Clear all categories and move items to general list?"
-                    )
-                  ) {
-                    clearProject(false);
-                  }
-                }}
-                className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] rounded-lg transition-all duration-200"
+                onClick={toggleTheme}
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-all duration-200 hover:text-violet-600 dark:hover:text-violet-400"
               >
-                Clear Categories
+                {theme === "dark" ? "🌞" : "🌙"}
               </button>
               <button
-                onClick={() => {
-                  if (
-                    window.confirm(
-                      "Clear all categories and items? This cannot be undone."
-                    )
-                  ) {
-                    clearProject(true);
-                  }
-                }}
-                className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] rounded-lg transition-all duration-200"
+                onClick={handleSave}
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-violet-500 hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700 text-white transition-all duration-200 shadow-sm hover:shadow-md"
               >
-                Clear Everything
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Save Changes
               </button>
+            </div>
+
+            <div className="flex items-center">
               <button
                 onClick={() =>
                   setState((prev) => ({ ...prev, currentProjectId: null }))
                 }
-                className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] rounded-lg transition-all duration-200"
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-900/20 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-violet-200 dark:hover:border-violet-800 transition-all duration-200 shadow-sm hover:shadow-md"
               >
                 Back to Projects
               </button>
-              <button
-                onClick={handleSave}
-                className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] rounded-lg transition-all duration-200"
-              >
-                Save Changes
-              </button>
-            </div>
-          </div>
 
-          {/* Save Status Toast */}
-          {saveStatus && (
-            <div
-              className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transition-all transform ${
-                saveStatus.type === "success"
-                  ? "bg-green-600 text-white"
-                  : "bg-red-600 text-white"
-              }`}
-            >
-              {saveStatus.message}
-            </div>
-          )}
-
-          {/* Main Content */}
-          <div className="grid grid-cols-[400px_1fr] gap-8">
-            {/* Left Sidebar */}
-            <div className="space-y-6">
-              {/* Add Category */}
-              <div className="bg-[#2E3944] backdrop-blur-sm rounded-xl p-4 shadow-lg border border-[#748D92]/30">
-                <h2 className="text-lg font-semibold text-[#D3D9D4] mb-4">
-                  Add Category
-                </h2>
-                <div className="flex gap-2">
-                  <input
-                    value={newCategoryName}
-                    onChange={(e) => setNewCategoryName(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        const name = newCategoryName.trim();
-                        if (name) {
-                          addCategory(name);
-                          setNewCategoryName("");
-                        }
-                      }
-                    }}
-                    placeholder="Category name..."
-                    className="flex-1 px-3 py-2 text-sm bg-[#212A31] border border-[#748D92]/30 rounded-lg text-[#D3D9D4] placeholder-[#748D92]/70 focus:outline-none focus:border-[#748D92] transition-all duration-200"
-                  />
+              <div className="relative group">
+                <button className="px-4 py-2 text-sm font-medium rounded-lg ml-2 bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-900/20 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-violet-200 dark:hover:border-violet-800 transition-all duration-200 shadow-sm hover:shadow-md">
+                  Actions
+                  <span className="ml-2">▼</span>
+                </button>
+                <div className="absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 invisible group-hover:visible transition-all duration-200">
                   <button
                     onClick={() => {
+                      if (
+                        window.confirm(
+                          "Clear all categories and move items to general list?"
+                        )
+                      ) {
+                        clearProject(false);
+                      }
+                    }}
+                    className="w-full px-4 py-2 text-sm text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    Clear Categories
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Clear all categories and items? This cannot be undone."
+                        )
+                      ) {
+                        clearProject(true);
+                      }
+                    }}
+                    className="w-full px-4 py-2 text-sm text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+                  >
+                    Clear Everything
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Save Status Toast */}
+        {saveStatus && (
+          <div
+            className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg transition-all transform ${
+              saveStatus.type === "success"
+                ? "bg-green-600 text-white"
+                : "bg-red-600 text-white"
+            }`}
+          >
+            {saveStatus.message}
+          </div>
+        )}
+
+        {/* Main Content */}
+        <div className="grid grid-cols-[400px_1fr] gap-8">
+          {/* Left Sidebar */}
+          <div className="space-y-6">
+            {/* Add Category */}
+            <div className="backdrop-blur-sm rounded-xl p-4 shadow-sm border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                Add Category
+              </h2>
+              <div className="flex gap-2">
+                <input
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
                       const name = newCategoryName.trim();
                       if (name) {
                         addCategory(name);
                         setNewCategoryName("");
                       }
-                    }}
-                    className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] hover:border-[#D3D9D4] rounded-lg transition-all duration-200"
-                  >
-                    Add
-                  </button>
-                </div>
-              </div>
-
-              {/* Add Items */}
-              <div className="bg-[#2E3944] backdrop-blur-sm rounded-xl p-4 shadow-lg border border-[#748D92]/30">
-                <h2 className="text-lg font-semibold text-[#D3D9D4] mb-4">
-                  Add Items
-                </h2>
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    const form = e.target as HTMLFormElement;
-                    const textarea = form.elements.namedItem(
-                      "items"
-                    ) as HTMLTextAreaElement;
-                    addBulkItems(textarea.value);
-                    textarea.value = "";
+                    }
                   }}
+                  placeholder="Category name..."
+                  className="flex-1 px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <button
+                  onClick={() => {
+                    const name = newCategoryName.trim();
+                    if (name) {
+                      addCategory(name);
+                      setNewCategoryName("");
+                    }
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-violet-500 hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700 text-white transition-all duration-200 shadow-sm hover:shadow-md"
                 >
-                  <textarea
-                    name="items"
-                    placeholder="* Item 1 * Item 2 * Item 3"
-                    className="w-full h-24 px-3 py-2 text-sm bg-[#212A31] border border-[#748D92]/30 rounded-lg text-[#D3D9D4] placeholder-[#748D92]/70 resize-none focus:outline-none focus:border-[#748D92] font-mono mb-2"
-                  />
-                  <button
-                    type="submit"
-                    className="w-full px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] hover:border-[#D3D9D4] rounded-lg transition-all duration-200"
-                  >
-                    Add Items
-                  </button>
-                </form>
+                  Add
+                </button>
               </div>
-
-              {/* General Items */}
-              <DroppableContainer
-                id={null}
-                title="General Items"
-                items={currentProject.items}
-                onMove={moveItem}
-                onDelete={deleteItem}
-              />
             </div>
 
-            {/* Categories Grid */}
-            <div className="overflow-x-auto scrollbar-hide">
-              <div className="flex gap-4 pb-4 min-w-max">
-                {currentProject.categories.map((category) => (
-                  <DroppableContainer
-                    key={category.id}
-                    id={category.id}
-                    title={category.name}
-                    items={category.items}
-                    onMove={moveItem}
-                    onDelete={deleteItem}
-                    onDeleteCategory={() => deleteCategory(category.id)}
-                    onRenameCategory={(newName) =>
-                      renameCategory(category.id, newName)
-                    }
-                  />
-                ))}
-              </div>
+            {/* Add Items */}
+            <div className="backdrop-blur-sm rounded-xl p-4 shadow-sm border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                Add Items
+              </h2>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const form = e.target as HTMLFormElement;
+                  const textarea = form.elements.namedItem(
+                    "items"
+                  ) as HTMLTextAreaElement;
+                  addBulkItems(textarea.value);
+                  textarea.value = "";
+                }}
+              >
+                <textarea
+                  name="items"
+                  placeholder="* Item 1&#10;* Item 2&#10;* Item 3"
+                  className="w-full h-24 px-3 py-2 text-sm rounded-lg border mb-2 resize-none bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                />
+                <button
+                  type="submit"
+                  className="inline-items-center w-full gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-violet-500 hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700 text-white transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                  Add Items
+                </button>
+              </form>
+            </div>
+
+            {/* General Items */}
+            <DroppableContainer
+              id={null}
+              title="General Items"
+              items={currentProject.items}
+              onMove={moveItem}
+              onDelete={deleteItem}
+            />
+          </div>
+
+          {/* Categories Grid */}
+          <div className="overflow-x-auto scrollbar-hide min-h-[80dvh]">
+            <div className="flex gap-4 pb-4 min-w-max">
+              {currentProject.categories.map((category) => (
+                <DroppableContainer
+                  key={category.id}
+                  id={category.id}
+                  title={category.name}
+                  items={category.items}
+                  onMove={moveItem}
+                  onDelete={deleteItem}
+                  onDeleteCategory={deleteCategory}
+                  onRenameCategory={(newName) =>
+                    renameCategory(category.id, newName)
+                  }
+                />
+              ))}
             </div>
           </div>
         </div>
       </div>
-    </DndProvider>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <DndProvider backend={HTML5Backend}>
+        <AppContent />
+      </DndProvider>
+    </ThemeProvider>
   );
 }
 

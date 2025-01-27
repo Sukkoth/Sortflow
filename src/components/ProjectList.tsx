@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Project } from "../types";
-
 interface Props {
   projects: Project[];
   onSelect: (project: Project) => void;
@@ -10,74 +9,71 @@ interface Props {
 
 export function ProjectList({ projects, onSelect, onCreate, onDelete }: Props) {
   const [isCreating, setIsCreating] = useState(false);
-  const [newProject, setNewProject] = useState({ name: "", description: "" });
+  const [newProjectName, setNewProjectName] = useState("");
+  const [newProjectDescription, setNewProjectDescription] = useState("");
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
 
   const handleCreate = () => {
-    if (!newProject.name.trim()) return;
-    onCreate(newProject.name, newProject.description);
-    setNewProject({ name: "", description: "" });
+    if (!newProjectName.trim()) return;
+    onCreate(newProjectName.trim(), newProjectDescription.trim());
+    setNewProjectName("");
+    setNewProjectDescription("");
     setIsCreating(false);
   };
 
   return (
-    <div className="min-h-screen p-8">
+    <div
+      className={`min-h-screen p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-white`}
+    >
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-[#D3D9D4]">My Projects</h1>
-          <button
-            onClick={() => setIsCreating(true)}
-            className="px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] hover:border-[#D3D9D4] rounded-lg transition-all duration-200"
-          >
-            New Project
-          </button>
+          <h1 className={`text-3xl font-bold`}>My Projects</h1>
         </div>
 
         {isCreating && (
-          <div className="bg-[#2E3944] backdrop-blur-sm rounded-xl p-6 border border-[#748D92]/30 mb-6 animate-fade-in">
-            <h2 className="text-xl font-semibold text-[#D3D9D4] mb-4">
-              Create New Project
-            </h2>
+          <div
+            className={`bg-white dark:bg-gray-800 backdrop-blur-sm rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-6 animate-fade-in`}
+          >
+            <h2 className={`text-xl font-semibold mb-4`}>Create New Project</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#748D92] mb-1">
+                <label
+                  className={`block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300`}
+                >
                   Project Name
                 </label>
                 <input
                   type="text"
-                  value={newProject.name}
-                  onChange={(e) =>
-                    setNewProject((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  className="w-full px-4 py-2 bg-[#212A31] border border-[#748D92]/30 rounded-lg text-[#D3D9D4] placeholder-[#748D92]/50 focus:outline-none focus:border-[#748D92] transition-all duration-200"
-                  placeholder="Enter project name..."
+                  value={newProjectName}
+                  onChange={(e) => setNewProjectName(e.target.value)}
+                  className={`w-full px-4 py-2 rounded-lg border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200`}
+                  placeholder="Enter project name"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-[#748D92] mb-1">
+                <label
+                  className={`block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300`}
+                >
                   Description
                 </label>
                 <textarea
-                  value={newProject.description}
-                  onChange={(e) =>
-                    setNewProject((prev) => ({
-                      ...prev,
-                      description: e.target.value,
-                    }))
-                  }
-                  className="w-full px-4 py-2 bg-[#212A31] border border-[#748D92]/30 rounded-lg text-[#D3D9D4] placeholder-[#748D92]/50 focus:outline-none focus:border-[#748D92] transition-all duration-200 h-24 resize-none"
-                  placeholder="Enter project description..."
+                  value={newProjectDescription}
+                  onChange={(e) => setNewProjectDescription(e.target.value)}
+                  className={`w-full px-4 py-2 rounded-lg border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200`}
+                  placeholder="Enter project description"
+                  rows={3}
                 />
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={handleCreate}
-                  className="flex-1 px-4 py-2 text-sm font-medium text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] hover:border-[#D3D9D4] rounded-lg transition-all duration-200"
+                  className="inline-flex w-full justify-center items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-violet-500 hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700 text-white transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Create Project
                 </button>
                 <button
                   onClick={() => setIsCreating(false)}
-                  className="px-4 py-2 text-sm font-medium text-[#748D92] bg-[#212A31] hover:bg-[#2E3944] border border-[#748D92]/30 hover:border-[#748D92] rounded-lg transition-all duration-200"
+                  className={`px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white transition-all duration-200`}
                 >
                   Cancel
                 </button>
@@ -86,55 +82,119 @@ export function ProjectList({ projects, onSelect, onCreate, onDelete }: Props) {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map((project) => (
             <div
               key={project.id}
-              className="group bg-[#2E3944] backdrop-blur-sm p-6 rounded-xl border border-[#748D92]/30 hover:border-[#D3D9D4] hover:bg-[#124E66] transition-all duration-200 text-left relative"
+              className="p-6 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-violet-200 dark:hover:border-violet-800 shadow-sm hover:shadow-md transition-all duration-200"
             >
-              <button
-                onClick={() => onSelect(project)}
-                className="w-full text-left"
-              >
-                <h3 className="text-lg font-semibold text-[#D3D9D4] mb-2 group-hover:text-[#D3D9D4]">
-                  {project.name}
-                </h3>
-                <p className="text-[#748D92] text-sm group-hover:text-[#D3D9D4]/90">
-                  {project.description}
-                </p>
-                <div className="flex items-center justify-between text-xs text-[#748D92]">
-                  <span>
-                    Created {new Date(project.createdAt).toLocaleDateString()}
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <span>{project.categories.length} Categories</span>
-                    <span>•</span>
-                    <span>{project.items.length} Items</span>
-                  </span>
-                </div>
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete(project.id);
-                }}
-                className="absolute top-4 right-4 p-2 text-[#748D92] hover:text-[#D3D9D4] opacity-0 group-hover:opacity-100 transition-all duration-200 rounded-lg hover:bg-[#212A31]/50"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
+              {editingProject?.id === project.id ? (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (editingProject.name.trim()) {
+                      // onEdit(editingProject);
+                      setEditingProject(null);
+                    }
+                  }}
+                  className="space-y-4"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clipRule="evenodd"
+                  <input
+                    type="text"
+                    value={editingProject?.name}
+                    onChange={(e) =>
+                      setEditingProject({
+                        ...editingProject,
+                        name: e.target.value,
+                      })
+                    }
+                    className={`w-full px-4 py-2 rounded-lg border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200`}
                   />
-                </svg>
-              </button>
+                  <textarea
+                    value={editingProject?.description}
+                    onChange={(e) =>
+                      setEditingProject({
+                        ...editingProject,
+                        description: e.target.value,
+                      })
+                    }
+                    className={`w-full px-4 py-2 rounded-lg border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200`}
+                    rows={3}
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="submit"
+                      className={`px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-all duration-200`}
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setEditingProject(null)}
+                      className={`px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white transition-all duration-200`}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                    {project.name}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                    {project.description}
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <button
+                      onClick={() => onSelect(project)}
+                      className="px-4 py-2 text-sm font-medium rounded-lg bg-violet-500 hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700 text-white transition-all duration-200 shadow-sm hover:shadow-md"
+                    >
+                      Open Project
+                    </button>
+                    <button
+                      onClick={() => onDelete(project.id)}
+                      className="p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-all duration-200"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           ))}
+          {!isCreating && (
+            <button
+              onClick={() => setIsCreating(true)}
+              className="p-6 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-violet-300 dark:hover:border-violet-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
+              </svg>
+              Add New Project
+            </button>
+          )}
         </div>
       </div>
     </div>

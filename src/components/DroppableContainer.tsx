@@ -1,15 +1,14 @@
 import { useDrop } from "react-dnd";
 import { Item } from "../types";
 import { DraggableItem } from "./DraggableItem";
-import { useState } from "react";
-
+import { useState, useRef, useEffect } from "react";
 interface Props {
   id: string | null;
   title: string;
   items: Item[];
   onMove: (itemId: string, fromId: string | null, toId: string | null) => void;
   onDelete: (itemId: string, categoryId: string | null) => void;
-  onDeleteCategory?: () => void;
+  onDeleteCategory?: (categoryId: string, deleteItems: boolean) => void;
   onRenameCategory?: (newName: string) => void;
 }
 
@@ -34,42 +33,57 @@ export function DroppableContainer({
     }),
   }));
 
+  const optionsRef = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState(title);
   const [showOptions, setShowOptions] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        optionsRef.current &&
+        !optionsRef.current.contains(event.target as Node)
+      ) {
+        setShowOptions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleRename = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (onRenameCategory && newName.trim()) {
+      onRenameCategory(newName);
+      setIsEditing(false);
+      setShowOptions(false);
+    }
+  };
+
   return (
     <div
       ref={drop}
-      className={`
-        relative group h-fit min-w-[400px]
-        bg-[#2E3944] backdrop-blur-sm rounded-xl p-4 shadow-lg border border-[#748D92]/30
-        ${isOver ? "border-[#D3D9D4]" : ""}
-      `}
+      className={`relative group h-fit min-w-[400px] rounded-xl p-4 shadow-lg border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 ${
+        isOver ? "ring-2 ring-violet-500" : ""
+      }`}
     >
       <div className="flex items-center justify-between mb-4">
         {isEditing ? (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (onRenameCategory) {
-                onRenameCategory(newName);
-                setIsEditing(false);
-              }
-            }}
-            className="flex-1 flex gap-2"
-          >
+          <form onSubmit={handleRename} className="flex-1 flex gap-2">
             <input
               type="text"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              className="flex-1 px-2 py-1 text-sm bg-[#212A31] border border-[#748D92]/30 rounded-lg text-[#D3D9D4]"
+              className="flex-1 px-2 py-1 text-sm rounded border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
               autoFocus
             />
             <button
               type="submit"
-              className="px-2 py-1 text-xs text-[#D3D9D4] bg-[#124E66] hover:bg-[#2E3944] border border-[#748D92] hover:border-[#D3D9D4] rounded-lg transition-all duration-200"
+              className="px-2 py-1 text-xs text-white bg-violet-500 hover:bg-violet-700 border border-violet-500 hover:border-violet-700 rounded-lg transition-all duration-200"
             >
               Save
             </button>
@@ -79,7 +93,7 @@ export function DroppableContainer({
                 setIsEditing(false);
                 setNewName(title);
               }}
-              className="px-2 py-1 text-xs text-[#748D92] bg-[#212A31] hover:bg-[#2E3944] border border-[#748D92]/30 hover:border-[#748D92] rounded-lg transition-all duration-200"
+              className="px-2 py-1 text-xs text-gray-500 bg-gray-700 hover:bg-gray-900 border border-gray-700 hover:border-gray-900 rounded-lg transition-all duration-200"
             >
               Cancel
             </button>
@@ -89,35 +103,39 @@ export function DroppableContainer({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="p-1 text-[#748D92] hover:text-[#D3D9D4] rounded-lg hover:bg-[#124E66] transition-all duration-200"
+                className="p-2 rounded-lg hover:bg-violet-100 dark:hover:bg-violet-900/30 text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className={`h-5 w-5 transition-transform ${
-                    isCollapsed ? "" : "rotate-90"
+                  className={`h-5 w-5 transform transition-transform duration-200 ${
+                    isCollapsed ? "rotate-180" : ""
                   }`}
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
                   <path
                     fillRule="evenodd"
-                    d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                     clipRule="evenodd"
                   />
                 </svg>
               </button>
-              <h3 className="text-lg font-semibold text-[#D3D9D4] flex items-center gap-2">
+              <h3
+                className={`text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2`}
+              >
                 {title}
-                <span className="text-sm font-normal text-[#748D92]">
+                <span
+                  className={`text-sm font-normal text-gray-500 dark:text-gray-400`}
+                >
                   ({items.length})
                 </span>
               </h3>
             </div>
             {id !== null && (
-              <div className="relative">
+              <div className="relative" ref={optionsRef}>
                 <button
                   onClick={() => setShowOptions(!showOptions)}
-                  className="p-1 text-[#748D92] hover:text-[#D3D9D4] rounded-lg hover:bg-[#124E66] transition-all duration-200"
+                  className="p-2 rounded-lg hover:bg-violet-100 dark:hover:bg-violet-900/30 text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -129,10 +147,13 @@ export function DroppableContainer({
                   </svg>
                 </button>
                 {showOptions && (
-                  <div className="absolute right-0 mt-1 w-48 rounded-lg bg-[#212A31] border border-[#748D92]/30 shadow-lg py-1 z-10">
+                  <div className="absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10">
                     <button
-                      onClick={() => setIsEditing(true)}
-                      className="w-full px-4 py-2 text-sm text-left text-[#748D92] hover:bg-[#2E3944] hover:text-[#D3D9D4] transition-all duration-200"
+                      onClick={() => {
+                        setIsEditing(true);
+                        setShowOptions(false);
+                      }}
+                      className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-colors"
                     >
                       Rename Category
                     </button>
@@ -140,27 +161,31 @@ export function DroppableContainer({
                       onClick={() => {
                         if (
                           window.confirm(
-                            "Move items to general list and delete category?"
+                            "Are you sure you want to delete this category? Items will be moved to general items."
                           )
                         ) {
-                          onDeleteCategory?.();
+                          onDeleteCategory?.(id, true); // true = move to general items
+                          setShowOptions(false);
                         }
                       }}
-                      className="w-full px-4 py-2 text-sm text-left text-[#748D92] hover:bg-[#2E3944] hover:text-[#D3D9D4] transition-all duration-200"
+                      className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                     >
-                      Delete Category & Move Items
+                      Delete without Items
                     </button>
                     <button
                       onClick={() => {
                         if (
-                          window.confirm("Delete category and all its items?")
+                          window.confirm(
+                            "Are you sure you want to delete this category and all its items permanently? This action cannot be undone."
+                          )
                         ) {
-                          onDeleteCategory?.();
+                          onDeleteCategory?.(id, false); // false = don't move to general items (delete everything)
+                          setShowOptions(false);
                         }
                       }}
-                      className="w-full px-4 py-2 text-sm text-left text-red-400 hover:bg-red-900/30 hover:text-red-300"
+                      className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                     >
-                      Delete Category & Items
+                      Delete with Items
                     </button>
                   </div>
                 )}
@@ -183,6 +208,11 @@ export function DroppableContainer({
             onDelete={() => onDelete(item.id, id)}
           />
         ))}
+        {items.length === 0 && (
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            No items yet
+          </p>
+        )}
       </div>
     </div>
   );
