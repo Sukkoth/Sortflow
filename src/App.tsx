@@ -331,64 +331,97 @@ function AppContent() {
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
       <div className="p-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-[#D3D9D4]">
-              {currentProject.name}
-            </h1>
-            <p className="text-[#748D92] text-sm mt-1">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-6">
+          <div className="flex-1">
+            <div className="flex items-center gap-3">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                {currentProject.name}
+              </h1>
+              <div className="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
+                {currentProject.categories.length} Categories
+              </div>
+            </div>
+            <p className="text-gray-600 dark:text-gray-400 text-sm mt-2 max-w-2xl">
               {currentProject.description}
             </p>
           </div>
-          <div className="flex gap-4">
-            <button
-              onClick={() => {
-                if (
-                  window.confirm(
-                    "Clear all categories and move items to general list?"
-                  )
-                ) {
-                  clearProject(false);
+
+          <div className="flex flex-wrap gap-3 items-center">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-all duration-200"
+              >
+                {theme === "dark" ? "🌞" : "🌙"}
+              </button>
+              <button
+                onClick={handleSave}
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-all duration-200"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Save Changes
+              </button>
+            </div>
+
+            <div className="flex items-center">
+              <button
+                onClick={() =>
+                  setState((prev) => ({ ...prev, currentProjectId: null }))
                 }
-              }}
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white border border-gray-200 dark:border-gray-600 transition-all duration-200"
-            >
-              Clear Categories
-            </button>
-            <button
-              onClick={() => {
-                if (
-                  window.confirm(
-                    "Clear all categories and items? This cannot be undone."
-                  )
-                ) {
-                  clearProject(true);
-                }
-              }}
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white transition-all duration-200"
-            >
-              Clear Everything
-            </button>
-            <button
-              onClick={() =>
-                setState((prev) => ({ ...prev, currentProjectId: null }))
-              }
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white border border-gray-200 dark:border-gray-600 transition-all duration-200"
-            >
-              Back to Projects
-            </button>
-            <button
-              onClick={handleSave}
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-all duration-200"
-            >
-              Save Changes
-            </button>
-            <button
-              onClick={toggleTheme}
-              className="px-4 py-2 text-sm font-medium rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white border border-gray-200 dark:border-gray-600 transition-all duration-200"
-            >
-              {theme === 'dark' ? '🌞 Light' : '🌙 Dark'}
-            </button>
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 transition-all duration-200"
+              >
+                Back to Projects
+              </button>
+
+              <div className="relative group">
+                <button className="px-4 py-2 text-sm font-medium rounded-lg ml-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 transition-all duration-200">
+                  Actions
+                  <span className="ml-2">▼</span>
+                </button>
+                <div className="absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-600 invisible group-hover:visible transition-all duration-200">
+                  <button
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Clear all categories and move items to general list?"
+                        )
+                      ) {
+                        clearProject(false);
+                      }
+                    }}
+                    className="w-full px-4 py-2 text-sm text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    Clear Categories
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Clear all categories and items? This cannot be undone."
+                        )
+                      ) {
+                        clearProject(true);
+                      }
+                    }}
+                    className="w-full px-4 py-2 text-sm text-left text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+                  >
+                    Clear Everything
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
