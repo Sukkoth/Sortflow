@@ -19,13 +19,9 @@ export function DraggableItem({ item, containerId, onDelete }: Props) {
   return (
     <div
       ref={drag}
-      className={`group relative flex items-center gap-2 p-3 rounded-lg 
-        bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600
-        ${isDragging ? "opacity-50 scale-95 rotate-2" : ""}
-        shadow-sm hover:shadow-md hover:scale-[1.02]
-        transition-all duration-200 ease-in-out 
-        cursor-move w-[97%] mx-auto text-sm
-      `}
+      className={`group flex items-center justify-between p-3 mb-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-violet-200 dark:hover:border-violet-800 shadow-sm hover:shadow-md transition-all duration-200 ${
+        isDragging ? "opacity-50" : ""
+      }`}
     >
       <div className="w-1.5 h-1.5 rounded-full bg-gray-500 dark:bg-gray-400 group-hover:bg-gray-500 transition-colors" />
       <div className="flex-1 font-medium text-gray-600 dark:text-gray-300">
@@ -33,7 +29,7 @@ export function DraggableItem({ item, containerId, onDelete }: Props) {
       </div>
       <button
         onClick={onDelete}
-        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-red-500/20 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 hover:text-red-500 dark:hover:text-red-300"
+        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-full hover:bg-violet-100 dark:hover:bg-violet-900/30 text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

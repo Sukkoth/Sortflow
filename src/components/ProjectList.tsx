@@ -28,12 +28,6 @@ export function ProjectList({ projects, onSelect, onCreate, onDelete }: Props) {
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <h1 className={`text-3xl font-bold`}>My Projects</h1>
-          <button
-            onClick={() => setIsCreating(true)}
-            className={`px-4 py-2 text-sm font-medium rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-all duration-200`}
-          >
-            New Project
-          </button>
         </div>
 
         {isCreating && (
@@ -73,7 +67,7 @@ export function ProjectList({ projects, onSelect, onCreate, onDelete }: Props) {
               <div className="flex gap-2">
                 <button
                   onClick={handleCreate}
-                  className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-all duration-200`}
+                  className="inline-flex w-full justify-center items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-violet-500 hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700 text-white transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Create Project
                 </button>
@@ -88,11 +82,11 @@ export function ProjectList({ projects, onSelect, onCreate, onDelete }: Props) {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map((project) => (
             <div
               key={project.id}
-              className={`p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700`}
+              className="p-6 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-violet-200 dark:hover:border-violet-800 shadow-sm hover:shadow-md transition-all duration-200"
             >
               {editingProject?.id === project.id ? (
                 <form
@@ -144,41 +138,63 @@ export function ProjectList({ projects, onSelect, onCreate, onDelete }: Props) {
                 </form>
               ) : (
                 <>
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className={`text-xl font-semibold`}>{project.name}</h3>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setEditingProject(project)}
-                        className={`p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700`}
-                      >
-                        ✏️
-                      </button>
-                      <button
-                        onClick={() => onDelete(project.id)}
-                        className={`p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700`}
-                      >
-                        🗑️
-                      </button>
-                    </div>
-                  </div>
-                  <p className={`mb-4 text-gray-600 dark:text-gray-300`}>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                    {project.name}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
                     {project.description}
                   </p>
                   <div className="flex justify-between items-center">
-                    <div className={`text-gray-500 dark:text-gray-400`}>
-                      {project.categories.length} categories
-                    </div>
                     <button
                       onClick={() => onSelect(project)}
-                      className={`px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-all duration-200`}
+                      className="px-4 py-2 text-sm font-medium rounded-lg bg-violet-500 hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700 text-white transition-all duration-200 shadow-sm hover:shadow-md"
                     >
                       Open Project
+                    </button>
+                    <button
+                      onClick={() => onDelete(project.id)}
+                      className="p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-all duration-200"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
                     </button>
                   </div>
                 </>
               )}
             </div>
           ))}
+          {!isCreating && (
+            <button
+              onClick={() => setIsCreating(true)}
+              className="p-6 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-violet-300 dark:hover:border-violet-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
+              </svg>
+              Add New Project
+            </button>
+          )}
         </div>
       </div>
     </div>

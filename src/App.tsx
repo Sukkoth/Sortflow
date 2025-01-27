@@ -334,10 +334,10 @@ function AppContent() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-6">
           <div className="flex-1">
             <div className="flex items-center gap-3">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-500 to-violet-500 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
                 {currentProject.name}
               </h1>
-              <div className="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300">
+              <div className="px-3 py-1 text-xs font-medium rounded-full bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-300">
                 {currentProject.categories.length} Categories
               </div>
             </div>
@@ -350,13 +350,13 @@ function AppContent() {
             <div className="flex items-center gap-2">
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-all duration-200"
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-all duration-200 hover:text-violet-600 dark:hover:text-violet-400"
               >
                 {theme === "dark" ? "🌞" : "🌙"}
               </button>
               <button
                 onClick={handleSave}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-all duration-200"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-violet-500 hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700 text-white transition-all duration-200 shadow-sm hover:shadow-md"
               >
                 <svg
                   className="w-4 h-4"
@@ -380,17 +380,17 @@ function AppContent() {
                 onClick={() =>
                   setState((prev) => ({ ...prev, currentProjectId: null }))
                 }
-                className="px-4 py-2 text-sm font-medium rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 transition-all duration-200"
+                className="px-4 py-2 text-sm font-medium rounded-lg bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-900/20 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-violet-200 dark:hover:border-violet-800 transition-all duration-200 shadow-sm hover:shadow-md"
               >
                 Back to Projects
               </button>
 
               <div className="relative group">
-                <button className="px-4 py-2 text-sm font-medium rounded-lg ml-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 transition-all duration-200">
+                <button className="px-4 py-2 text-sm font-medium rounded-lg ml-2 bg-white dark:bg-gray-800 hover:bg-violet-50 dark:hover:bg-violet-900/20 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-violet-200 dark:hover:border-violet-800 transition-all duration-200 shadow-sm hover:shadow-md">
                   Actions
                   <span className="ml-2">▼</span>
                 </button>
-                <div className="absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-600 invisible group-hover:visible transition-all duration-200">
+                <div className="absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 invisible group-hover:visible transition-all duration-200">
                   <button
                     onClick={() => {
                       if (
@@ -443,7 +443,7 @@ function AppContent() {
           {/* Left Sidebar */}
           <div className="space-y-6">
             {/* Add Category */}
-            <div className="backdrop-blur-sm rounded-xl p-4 shadow-lg border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+            <div className="backdrop-blur-sm rounded-xl p-4 shadow-sm border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
               <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
                 Add Category
               </h2>
@@ -472,7 +472,7 @@ function AppContent() {
                       setNewCategoryName("");
                     }
                   }}
-                  className="px-4 py-2 text-sm font-medium rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-all duration-200"
+                  className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-violet-500 hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700 text-white transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Add
                 </button>
@@ -480,7 +480,7 @@ function AppContent() {
             </div>
 
             {/* Add Items */}
-            <div className="backdrop-blur-sm rounded-xl p-4 shadow-lg border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+            <div className="backdrop-blur-sm rounded-xl p-4 shadow-sm border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
               <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
                 Add Items
               </h2>
@@ -502,7 +502,7 @@ function AppContent() {
                 />
                 <button
                   type="submit"
-                  className="w-full px-4 py-2 text-sm font-medium rounded-lg bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white transition-all duration-200"
+                  className="inline-items-center w-full gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-violet-500 hover:bg-violet-600 dark:bg-violet-600 dark:hover:bg-violet-700 text-white transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Add Items
                 </button>
@@ -520,7 +520,7 @@ function AppContent() {
           </div>
 
           {/* Categories Grid */}
-          <div className="overflow-x-auto scrollbar-hide">
+          <div className="overflow-x-auto scrollbar-hide min-h-[80dvh]">
             <div className="flex gap-4 pb-4 min-w-max">
               {currentProject.categories.map((category) => (
                 <DroppableContainer

@@ -68,7 +68,7 @@ export function DroppableContainer({
     <div
       ref={drop}
       className={`relative group h-fit min-w-[400px] rounded-xl p-4 shadow-lg border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 ${
-        isOver ? "ring-2 ring-blue-500" : ""
+        isOver ? "ring-2 ring-violet-500" : ""
       }`}
     >
       <div className="flex items-center justify-between mb-4">
@@ -78,12 +78,12 @@ export function DroppableContainer({
               type="text"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              className="flex-1 px-2 py-1 text-sm rounded border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-2 py-1 text-sm rounded border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-violet-500"
               autoFocus
             />
             <button
               type="submit"
-              className="px-2 py-1 text-xs text-blue-500 bg-blue-500 hover:bg-blue-700 border border-blue-500 hover:border-blue-700 rounded-lg transition-all duration-200"
+              className="px-2 py-1 text-xs text-white bg-violet-500 hover:bg-violet-700 border border-violet-500 hover:border-violet-700 rounded-lg transition-all duration-200"
             >
               Save
             </button>
@@ -103,19 +103,19 @@ export function DroppableContainer({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="p-1 text-gray-500 dark:text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-500 transition-all duration-200"
+                className="p-2 rounded-lg hover:bg-violet-100 dark:hover:bg-violet-900/30 text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className={`h-5 w-5 transition-transform ${
-                    isCollapsed ? "" : "rotate-90"
+                  className={`h-5 w-5 transform transition-transform duration-200 ${
+                    isCollapsed ? "rotate-180" : ""
                   }`}
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
                   <path
                     fillRule="evenodd"
-                    d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                     clipRule="evenodd"
                   />
                 </svg>
@@ -135,7 +135,7 @@ export function DroppableContainer({
               <div className="relative" ref={optionsRef}>
                 <button
                   onClick={() => setShowOptions(!showOptions)}
-                  className="p-1 text-gray-500 dark:text-gray-400 hover:text-blue-500 rounded-lg hover:bg-blue-500 transition-all duration-200"
+                  className="p-2 rounded-lg hover:bg-violet-100 dark:hover:bg-violet-900/30 text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -147,15 +147,13 @@ export function DroppableContainer({
                   </svg>
                 </button>
                 {showOptions && (
-                  <div
-                    className={`absolute right-0 mt-1 w-48 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg py-1 z-10`}
-                  >
+                  <div className="absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10">
                     <button
                       onClick={() => {
                         setIsEditing(true);
                         setShowOptions(false);
                       }}
-                      className="w-full px-4 py-2 text-sm text-left text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-all duration-200"
+                      className="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-900/30 transition-colors"
                     >
                       Rename Category
                     </button>
@@ -170,7 +168,7 @@ export function DroppableContainer({
                           setShowOptions(false);
                         }
                       }}
-                      className="w-full px-4 py-2 text-sm text-left text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-all duration-200"
+                      className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                     >
                       Delete without Items
                     </button>
@@ -185,7 +183,7 @@ export function DroppableContainer({
                           setShowOptions(false);
                         }
                       }}
-                      className="w-full px-4 py-2 text-sm text-left text-red-500 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 hover:text-red-600 dark:hover:text-red-500 transition-all duration-200"
+                      className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                     >
                       Delete with Items
                     </button>
